@@ -17,9 +17,9 @@ WORKDIR C:/temp
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 RUN Invoke-WebRequest -Uri https://go.microsoft.com/fwlink/p/?linkid=2215158 -OutFile SQL2022-SSEI-Dev.exe
-RUN .\SQL2022-SSEI-Dev.exe /Action=Download /MediaType=CAB /MediaPath=C:/temp /Quiet /Verbose
+RUN Start-Process -Wait -FilePath C:\temp\SQL2022-SSEI-Dev.exe -ArgumentList /ACTION=Download, /MEDIATYPE=CAB, /MEDIAPATH=C:/temp, /QUIET, /VERBOSE
 
-RUN Start-Process -Wait -FilePath .\SQLServer2022-DEV-x64-ENU.exe -ArgumentList /qs, /x:setup ; \
+RUN Start-Process -Wait -FilePath C:\temp\SQLServer2022-DEV-x64-ENU.exe -ArgumentList /qs, /x:setup ; \
     .\setup\setup.exe /q /ACTION=Install /INSTANCENAME=MSSQLSERVER /FEATURES=SQLEngine /UPDATEENABLED=0 /SQLSVCACCOUNT='NT AUTHORITY\NETWORK SERVICE' /SQLSYSADMINACCOUNTS='BUILTIN\ADMINISTRATORS' /TCPENABLED=1 /NPENABLED=0 /IACCEPTSQLSERVERLICENSETERMS ;
 
 RUN stop-service MSSQLSERVER ; \
